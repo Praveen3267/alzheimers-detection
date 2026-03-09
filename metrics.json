@@ -1,0 +1,65 @@
+{
+  "random_forest_handwriting": {
+    "model_type": "Machine Learning",
+    "modality": "Handwriting",
+    "final_metrics": {
+      "accuracy": 0.9056603773584906,
+      "precision": 0.8846153846153846,
+      "sensitivity": 0.92,
+      "specificity": 0.8928571428571429
+    },
+    "roc_data": {
+      "use_synthetic": true,
+      "auc": 0.91
+    }
+  },
+
+  "cnn_speech": {
+    "model_type": "Deep Learning",
+    "modality": "Speech",
+    "final_metrics": {
+      "accuracy": 0.98
+    },
+    "training_history": {
+      "accuracy": [
+        0.5337, 0.6153, 0.7837, 0.9359, 0.9201,
+        0.9808, 0.9410, 0.9620, 0.9486, 0.9617, 0.9820
+      ],
+      "loss": [
+        0.7671, 0.6333, 0.5147, 0.4000, 0.3462,
+        0.2639, 0.2422, 0.1746, 0.1578, 0.1375, 0.0776
+      ],
+      "val_accuracy": [
+        0.6000, 0.7400, 0.8050, 0.9500, 0.9460,
+        0.9890, 0.9640, 0.9790, 0.9640, 0.9810, 0.9980
+      ],
+      "val_loss": [
+        0.6333, 0.5223, 0.4269, 0.3511, 0.2848,
+        0.2199, 0.1690, 0.1254, 0.0962, 0.0670, 0.0473
+      ]
+    },
+    "roc_data": {
+      "use_synthetic": true,
+      "auc": 0.98
+    }
+  },
+
+  "multimodal_complementary_framework": {
+    "approach": "Decision-level complementary multimodal analysis",
+    "final_metrics": {
+      "accuracy": 0.942
+    },
+    "comparison_ready": {
+      "models": [
+        "Random Forest",
+        "CNN",
+        "Multimodal"
+      ],
+      "accuracies": [
+        0.9056603773584906,
+        0.98,
+        0.942
+      ]
+    }
+  }
+}

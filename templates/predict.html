@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Alzheimer's Prediction</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:
+        linear-gradient(rgba(245,250,255,0.92), rgba(245,250,255,0.92)),
+        url("https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1600&q=80")
+        no-repeat center / cover;
+    padding:30px;
+}
+
+/* Container */
+.container{
+    max-width:1300px;
+    margin:auto;
+}
+
+/* Header */
+.header{
+    background: linear-gradient(135deg,#1565c0,#42a5f5);
+    color:#fff;
+    padding:25px 30px;
+    border-radius:14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.header h1{
+    font-size:26px;
+    font-weight:600;
+}
+
+.user-info{
+    font-size:15px;
+}
+
+.user-info a{
+    margin-left:15px;
+    text-decoration:none;
+    color:#fff;
+    background:rgba(255,255,255,0.25);
+    padding:8px 18px;
+    border-radius:30px;
+    transition:0.3s;
+}
+
+.user-info a:hover{
+    background:rgba(255,255,255,0.4);
+}
+
+/* Columns */
+.columns{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+    margin-top:35px;
+}
+
+/* Card */
+.card{
+    background:rgba(255,255,255,0.75);
+    backdrop-filter: blur(10px);
+    border-radius:16px;
+    padding:30px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.12);
+    border:1px solid rgba(255,255,255,0.5);
+}
+
+.card h2{
+    font-size:22px;
+    color:#1565c0;
+    margin-bottom:12px;
+    font-weight:600;
+}
+
+/* Badge */
+.badge{
+    background:#1565c0;
+    color:#fff;
+    padding:4px 12px;
+    border-radius:20px;
+    font-size:12px;
+    margin-left:10px;
+}
+
+/* Inputs */
+textarea,input[type="file"]{
+    width:100%;
+    padding:14px;
+    margin:15px 0;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:14px;
+}
+
+textarea{
+    min-height:150px;
+    resize:vertical;
+    font-family:monospace;
+}
+
+textarea:focus,
+input:focus{
+    outline:none;
+    border-color:#42a5f5;
+    box-shadow:0 0 8px rgba(66,165,245,0.4);
+}
+
+/* Buttons */
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(135deg,#43a047,#66bb6a);
+    color:#fff;
+    font-size:16px;
+    font-weight:500;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* Info box */
+.info{
+    background:#e3f2fd;
+    border-left:5px solid #1e88e5;
+    padding:12px;
+    border-radius:8px;
+    font-size:14px;
+    margin:12px 0;
+}
+
+/* Footer */
+.footer{
+    text-align:center;
+    margin-top:40px;
+}
+
+.footer a{
+    text-decoration:none;
+    color:#1565c0;
+    margin:0 20px;
+    font-weight:500;
+}
+
+/* Responsive */
+@media(max-width:900px){
+    .columns{
+        grid-template-columns:1fr;
+    }
+    .header{
+        flex-direction:column;
+        gap:15px;
+        text-align:center;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <h1>Alzheimer’s Detection System</h1>
+        <div class="user-info">
+            Logged in as <b>{{ session.username }}</b>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <!-- Main Columns -->
+    <div class="columns">
+
+        <!-- Handwriting -->
+        <div class="card">
+            <h2>Handwriting Analysis <span class="badge">{{ expected }} values</span></h2>
+
+            <form action="/predict_tabular" method="POST">
+                <textarea name="features" placeholder="Enter numerical features separated by comma or space..."></textarea>
+                <button type="submit">Predict from Handwriting</button>
+            </form>
+        </div>
+
+        <!-- Speech -->
+        <div class="card">
+            <h2>Speech Analysis <span class="badge">.wav</span></h2>
+
+            <div class="info">
+                Upload mono WAV audio (16kHz recommended)
+            </div>
+
+            <form action="/predict_audio" method="POST" enctype="multipart/form-data">
+                <input type="file" name="audio" accept=".wav" required>
+                <button type="submit">Predict from Speech</button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+    </div>
+
+</div>
+
+</body>
+</html>

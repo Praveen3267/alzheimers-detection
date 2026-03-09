@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alzheimer's Detection - Multimodal Framework for Early Detection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, #1a6fc4 0%, #0d4d8c 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .logo-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            background-color: white;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-text h2 {
+            font-size: 2.5rem;
+            color: #0d4d8c;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            color: #555;
+        }
+
+        .hero-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background-color: #f0f7ff;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: #0d4d8c;
+            font-size: 2.2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            background-color: #e6f0ff;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon i {
+            font-size: 2rem;
+            color: #1a6fc4;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #0d4d8c;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 80px 0;
+            background-color: white;
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            position: relative;
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background-color: #1a6fc4;
+            z-index: 1;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background-color: #1a6fc4;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+
+        .step h3 {
+            margin-bottom: 15px;
+            color: #0d4d8c;
+        }
+
+        /* Call to Action */
+        .cta {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #1a6fc4 0%, #0d4d8c 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: white;
+            color: #1a6fc4;
+        }
+
+        .btn-primary:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #0a3c6e;
+            color: white;
+            padding: 40px 0 20px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+        }
+
+        .footer-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #8bc1ff;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #c9e2ff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: #8bc1ff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero-content {
+                flex-direction: column;
+            }
+            
+            .steps-container {
+                flex-direction: column;
+                gap: 50px;
+            }
+            
+            .steps-container::before {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            nav ul {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <div class="logo-text">
+                    <h1>Alzheimer's Multimodal Detection System</h1>
+                    <p>Early detection through handwriting and speech analysis</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/" class="active">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/signup">Sign Up</a></li>
+                    <li><a href="/Feature">Feature</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h2>Multimodal Framework for Early Detection of Alzheimer's Disease</h2>
+                <p>Our advanced deep learning system analyzes handwriting patterns and speech characteristics to identify early signs of Alzheimer's disease, enabling timely intervention and better patient outcomes.</p>
+                <p>By combining 450+ handwriting features with voice MFCC analysis, we achieve higher accuracy than single-modal approaches.</p>
+                <div class="cta-buttons" style="justify-content: flex-start; margin-top: 30px;">
+                    <a href="/signup" class="btn btn-primary">Get Started Today</a>
+                    <a href="/about" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <!-- Using a placeholder image related to brain health -->
+                <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Brain Analysis for Alzheimer's Detection">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Our Advanced Detection Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-pen-fancy"></i>
+                    </div>
+                    <h3>Handwriting Analysis</h3>
+                    <p>Extracts 450+ numerical features from handwriting samples including pressure, stroke velocity, tremors, and spatial organization to detect micrographia and other early signs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-microphone-alt"></i>
+                    </div>
+                    <h3>Speech Recognition</h3>
+                    <p>Analyzes MFCC (Mel-frequency cepstral coefficients) from voice recordings to identify speech patterns, hesitation, word-finding difficulties, and phonetic changes associated with cognitive decline.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Deep Learning Integration</h3>
+                    <p>Combines both modalities using convolutional and recurrent neural networks to achieve higher predictive accuracy than single-modality approaches.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How Our System Works</h2>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Data Collection</h3>
+                    <p>Users provide handwriting samples and voice recordings through our secure platform.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Feature Extraction</h3>
+                    <p>Our system extracts 450+ handwriting features and MFCC from speech recordings.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Multimodal Analysis</h3>
+                    <p>Deep learning models analyze both data streams to identify patterns associated with early-stage Alzheimer's.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Results & Recommendations</h3>
+                    <p>Users receive a detailed report with risk assessment and recommendations for next steps.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta">
+        <div class="container">
+            <h2>Start Your Early Detection Journey Today</h2>
+            <p>Join healthcare providers and individuals worldwide who are using our multimodal system for early Alzheimer's detection. Early identification can significantly improve treatment outcomes.</p>
+            <div class="cta-buttons">
+                <a href="/signup" class="btn btn-primary">Create Free Account</a>
+                <a href="/about" class="btn btn-secondary">View Clinical Studies</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Alzheimer's Detection System</h3>
+                    <p>A multimodal framework for early detection using deep learning analysis of handwriting and speech patterns.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about">About the Project</a></li>
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/signup">Sign Up</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Research & Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Clinical Validation</a></li>
+                        <li><a href="#">Publications</a></li>
+                        <li><a href="#">Data Privacy</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2026 Alzheimer's Multimodal Detection System. All rights reserved. | For research and clinical use.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple script for interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effect to feature cards
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if(targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alzheimer's Detection - Multimodal Framework for Early Detection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-blue: #1a6fc4;
+            --dark-blue: #0d4d8c;
+            --light-blue: #e6f0ff;
+            --accent-teal: #2dc2c2;
+            --light-gray: #f8f9fa;
+            --medium-gray: #eaeaea;
+            --text-dark: #333;
+            --text-light: #666;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.8rem;
+            color: var(--dark-blue);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .section-title p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .title-line {
+            height: 4px;
+            width: 80px;
+            background: linear-gradient(to right, var(--primary-blue), var(--accent-teal));
+            margin: 20px auto 0;
+            border-radius: 2px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary-blue), var(--accent-teal));
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(45, 194, 194, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(26, 111, 196, 0.05);
+            transform: translateY(-3px);
+        }
+
+        /* Header */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-teal));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.6rem;
+            color: var(--dark-blue);
+            line-height: 1.2;
+        }
+
+        .logo-text p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 0;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        nav a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-blue), var(--accent-teal));
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s;
+            border-radius: 2px;
+        }
+
+        nav a:hover:after, nav a.active:after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-blue);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding-top: 160px;
+            background: linear-gradient(135deg, rgba(230, 240, 255, 0.7) 0%, rgba(255, 255, 255, 0.9) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3.2rem;
+            color: var(--dark-blue);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-content .highlight {
+            color: var(--accent-teal);
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-content .highlight:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 10px;
+            background-color: rgba(45, 194, 194, 0.2);
+            bottom: 5px;
+            left: 0;
+            z-index: -1;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .hero-image {
+            position: relative;
+        }
+
+        .hero-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            transform: perspective(1000px) rotateY(-10deg);
+            transition: transform 0.5s;
+        }
+
+        .hero-image img:hover {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+            padding: 30px;
+            background-color: var(--white);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Project Overview */
+        .overview {
+            background-color: var(--white);
+        }
+
+        .overview-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .overview-image img {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .overview-content h3 {
+            font-size: 2rem;
+            color: var(--dark-blue);
+            margin-bottom: 20px;
+        }
+
+        .overview-content p {
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+
+        .feature-list {
+            margin: 30px 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--light-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary-blue);
+        }
+
+        /* Modalities Section */
+        .modalities {
+            background-color: var(--light-gray);
+        }
+
+        .modalities-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .modality-card {
+            background-color: var(--white);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modality-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .modality-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-blue), var(--accent-teal));
+        }
+
+        .modality-icon {
+            font-size: 3rem;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+        }
+
+        .modality-card h3 {
+            font-size: 1.8rem;
+            color: var(--dark-blue);
+            margin-bottom: 15px;
+        }
+
+        .modality-image {
+            margin: 25px 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .modality-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Technology Stack */
+        .tech-stack {
+            background-color: var(--white);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .tech-card {
+            background-color: var(--light-gray);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .tech-card:hover {
+            background-color: var(--light-blue);
+            transform: translateY(-5px);
+        }
+
+        .tech-icon {
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+        }
+
+        /* Data Visualization */
+        .data-viz {
+            background-color: var(--light-gray);
+        }
+
+        .viz-container {
+            background-color: var(--white);
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: var(--shadow);
+        }
+
+        .viz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .viz-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .viz-tab {
+            padding: 10px 25px;
+            background-color: var(--light-gray);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .viz-tab.active {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .viz-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .viz-image {
+            text-align: center;
+        }
+
+        .viz-image img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-blue);
+            color: var(--white);
+            padding: 70px 0 30px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background-color: var(--accent-teal);
+            bottom: 0;
+            left: 0;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-teal);
+            padding-left: 5px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero-container, .overview-container, .modalities-container, .viz-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .hero {
+                padding-top: 140px;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.8rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.4rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+            
+            nav {
+                width: 100%;
+                order: 3;
+                margin-top: 20px;
+                display: none;
+            }
+            
+            nav.active {
+                display: block;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .hero-stats {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .viz-tabs {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            section {
+                padding: 70px 0;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.3rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                padding: 14px 28px;
+            }
+            
+            .viz-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Alzheimer's Detection</h1>
+                    <p>Multimodal Deep Learning Framework</p>
+                </div>
+            </div>
+            
+            <div class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="/" class="active">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <!-- <li><a href="/research">Research</a></li>
+                    <li><a href="/demo">Demo</a></li>
+                    <li><a href="/login" class="btn-secondary">Login</a></li>
+                    <li><a href="/signup" class="btn-primary">Sign Up</a></li> -->
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <h1>Multimodal Framework for <span class="highlight">Early Detection</span> of Alzheimer's Disease</h1>
+                <p>Revolutionizing Alzheimer's diagnosis through advanced analysis of handwriting patterns and speech characteristics using deep learning technologies.</p>
+                
+                <div class="hero-buttons">
+                    <a href="/signup" class="btn btn-primary">Get Started</a>
+                    <a href="#overview" class="btn btn-secondary">Learn More</a>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">450+</div>
+                        <div class="stat-label">Handwriting Features</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">94.2%</div>
+                        <div class="stat-label">Accuracy Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">2x</div>
+                        <div class="stat-label">Earlier Detection</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Brain Analysis Visualization">
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Overview -->
+    <section class="overview" id="overview">
+        <div class="container">
+            <div class="section-title">
+                <h2>Project Overview</h2>
+                <p>Our multimodal framework combines cutting-edge deep learning techniques with comprehensive data analysis for early Alzheimer's detection</p>
+                <div class="title-line"></div>
+            </div>
+            
+            <div class="overview-container">
+                <div class="overview-image">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Project Overview">
+                </div>
+                
+                <div class="overview-content">
+                    <h3>Innovative Approach to Early Diagnosis</h3>
+                    <p>Traditional Alzheimer's diagnosis relies on cognitive tests and brain imaging, which often detect the disease at later stages. Our multimodal framework enables earlier detection by analyzing subtle changes in handwriting and speech patterns.</p>
+                    
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div>
+                                <strong>Non-invasive assessment</strong> - No medical procedures required
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div>
+                                <strong>Remote monitoring</strong> - Accessible from anywhere
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div>
+                                <strong>Continuous tracking</strong> - Monitor changes over time
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p>By combining handwriting analysis with speech recognition, our system achieves higher accuracy than single-modality approaches, providing a comprehensive assessment of cognitive function.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modalities Section -->
+    <section class="modalities">
+        <div class="container">
+            <div class="section-title">
+                <h2>Dual Modality Analysis</h2>
+                <p>Our system leverages two complementary data sources for comprehensive assessment</p>
+                <div class="title-line"></div>
+            </div>
+            
+            <div class="modalities-container">
+                <!-- Handwriting Analysis -->
+                <div class="modality-card">
+                    <div class="modality-icon">
+                        <i class="fas fa-pen-fancy"></i>
+                    </div>
+                    <h3>Handwriting Analysis</h3>
+                    <p>We extract 450+ numerical features from digital handwriting samples, capturing subtle changes in motor control and cognitive function.</p>
+                    
+                    <div class="modality-image">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Handwriting Analysis">
+                    </div>
+                    
+                    <h4>Key Features Extracted:</h4>
+                    <ul>
+                        <li>Pressure dynamics and stroke velocity</li>
+                        <li>Tremor analysis and micrographia detection</li>
+                        <li>Spatial organization and letter formation</li>
+                        <li>Pause duration and writing rhythm</li>
+                        <li>Pen lifts and connection patterns</li>
+                    </ul>
+                </div>
+                
+                <!-- Speech Analysis -->
+                <div class="modality-card">
+                    <div class="modality-icon">
+                        <i class="fas fa-microphone-alt"></i>
+                    </div>
+                    <h3>Speech Recognition & Analysis</h3>
+                    <p>We analyze Mel-frequency cepstral coefficients (MFCC) from voice recordings to identify speech patterns associated with cognitive decline.</p>
+                    
+                    <div class="modality-image">
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Speech Analysis">
+                    </div>
+                    
+                    <h4>Speech Characteristics Analyzed:</h4>
+                    <ul>
+                        <li>Phonetic changes and articulation rate</li>
+                        <li>Hesitation patterns and word-finding difficulties</li>
+                        <li>Prosody and intonation variations</li>
+                        <li>Speech fluency and pause patterns</li>
+                        <li>Semantic content and verbal memory</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Stack -->
+    <section class="tech-stack">
+        <div class="container">
+            <div class="section-title">
+                <h2>Technology Stack</h2>
+                <p>Advanced deep learning architectures powering our detection framework</p>
+                <div class="title-line"></div>
+            </div>
+            
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3>Convolutional Neural Networks</h3>
+                    <p>For spatial feature extraction from handwriting images and spectrograms</p>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-redo-alt"></i>
+                    </div>
+                    <h3>Recurrent Neural Networks</h3>
+                    <p>For temporal pattern analysis in sequential handwriting and speech data</p>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-random"></i>
+                    </div>
+                    <h3>Multimodal Fusion</h3>
+                    <p>Late fusion architecture combining handwriting and speech features</p>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Transfer Learning</h3>
+                    <p>Pre-trained models fine-tuned for Alzheimer's detection task</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Visualization -->
+    <section class="data-viz">
+        <div class="container">
+            <div class="section-title">
+                <h2>Data Visualization & Results</h2>
+                <p>Interactive visualizations of our model performance and feature importance</p>
+                <div class="title-line"></div>
+            </div>
+            
+            <div class="viz-container">
+                <div class="viz-header">
+                    <h3>Model Performance Metrics</h3>
+                    <div class="viz-tabs">
+                        <div class="viz-tab active" data-tab="accuracy">Accuracy</div>
+                        <div class="viz-tab" data-tab="features">Feature Importance</div>
+                        <div class="viz-tab" data-tab="comparison">Modality Comparison</div>
+                    </div>
+                </div>
+                
+                <div class="viz-content">
+                    <div class="viz-image">
+                        <img id="vizImage" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Accuracy Visualization">
+                    </div>
+                    
+                    <div class="viz-text">
+                        <h3 id="vizTitle">Multimodal Model Accuracy</h3>
+                        <p id="vizDescription">Our multimodal approach achieves 94.2% accuracy in Alzheimer's detection, significantly outperforming single-modality models (handwriting-only: 86.7%, speech-only: 82.3%).</p>
+                        
+                        <div class="viz-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">94.2%</div>
+                                <div class="stat-label">Multimodal Accuracy</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">91.8%</div>
+                                <div class="stat-label">Sensitivity</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">96.1%</div>
+                                <div class="stat-label">Specificity</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Start Early Detection Today</h2>
+            <p>Join our research initiative or integrate our API into your healthcare platform. Early detection can significantly improve treatment outcomes and quality of life for Alzheimer's patients.</p>
+            
+            <div class="cta-buttons">
+                <a href="/signup" class="btn btn-primary">Get Free Trial</a>
+                <a href="/demo" class="btn btn-secondary">Request Demo</a>
+                <a href="/research" class="btn btn-secondary">View Research</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <!-- <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>Alzheimer's Detection</h3>
+                    <p>A multimodal deep learning framework for early detection of Alzheimer's disease through handwriting and speech analysis.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-researchgate"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about">About the Project</a></li>
+                        <li><a href="/research">Research Papers</a></li>
+                        <li><a href="/demo">Live Demo</a></li>
+                        <li><a href="/api">API Documentation</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Clinical Validation Studies</a></li>
+                        <li><a href="#">Data Privacy Policy</a></li>
+                        <li><a href="#">Technical Documentation</a></li>
+                        <li><a href="#">Frequently Asked Questions</a></li>
+                        <li><a href="#">Support Center</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> research@alzdetect.ai</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Neuroscience Research Center</li>
+                        <li>Building 12, Suite 300</li>
+                        <li>San Francisco, CA 94107</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2026 Alzheimer's Multimodal Detection Framework. All rights reserved. | For research and clinical use.</p>
+            </div>
+        </div>
+    </footer> -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menuToggle');
+            const mainNav = document.getElementById('mainNav');
+            
+            menuToggle.addEventListener('click', function() {
+                mainNav.classList.toggle('active');
+                menuToggle.innerHTML = mainNav.classList.contains('active') 
+                    ? '<i class="fas fa-times"></i>' 
+                    : '<i class="fas fa-bars"></i>';
+            });
+            
+            // Tab switching for visualization
+            const vizTabs = document.querySelectorAll('.viz-tab');
+            const vizImage = document.getElementById('vizImage');
+            const vizTitle = document.getElementById('vizTitle');
+            const vizDescription = document.getElementById('vizDescription');
+            
+            const tabData = {
+                accuracy: {
+                    title: "Multimodal Model Accuracy",
+                    description: "Our multimodal approach achieves 94.2% accuracy in Alzheimer's detection, significantly outperforming single-modality models (handwriting-only: 86.7%, speech-only: 82.3%).",
+                    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                },
+                features: {
+                    title: "Feature Importance Analysis",
+                    description: "Top predictive features include handwriting tremor frequency, speech pause duration, and pen pressure variability. The multimodal model leverages complementary features from both modalities.",
+                    image: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                },
+                comparison: {
+                    title: "Modality Comparison",
+                    description: "Combining handwriting and speech analysis provides more robust detection than either modality alone, especially in early-stage Alzheimer's where symptoms may be subtle.",
+                    image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                }
+            };
+            
+            vizTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    vizTabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Get tab data
+                    const tabId = this.getAttribute('data-tab');
+                    const data = tabData[tabId];
+                    
+                    // Update content
+                    vizTitle.textContent = data.title;
+                    vizDescription.textContent = data.description;
+                    vizImage.src = data.image;
+                    
+                    // Add animation
+                    vizImage.style.opacity = '0';
+                    setTimeout(() => {
+                        vizImage.style.opacity = '1';
+                        vizImage.style.transition = 'opacity 0.5s';
+                    }, 50);
+                });
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if(targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        // Close mobile menu if open
+                        if(mainNav.classList.contains('active')) {
+                            mainNav.classList.remove('active');
+                            menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                        }
+                        
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Add scroll effect to header
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('header');
+                if(window.scrollY > 50) {
+                    header.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.1)';
+                } else {
+                    header.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.05)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
