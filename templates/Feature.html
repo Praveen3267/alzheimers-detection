@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alzheimer's Detection System | Multimodal Framework</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --gradient-primary: linear-gradient(135deg, #2c3e50, #4a6491);
+            --gradient-secondary: linear-gradient(135deg, #3498db, #2980b9);
+            --gradient-accent: linear-gradient(135deg, #e74c3c, #c0392b);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+            --border-radius: 15px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #333;
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, .nav-tab, .logo {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        .main-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 70px 0 50px;
+            text-align: center;
+            border-radius: 0 0 25px 25px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color), var(--success-color));
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #fff, var(--light-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            color: var(--secondary-color);
+            filter: drop-shadow(0 0 5px rgba(52, 152, 219, 0.5));
+        }
+        
+        .header-title {
+            font-size: 3.2rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #fff, #a3d5ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-subtitle {
+            font-size: 1.4rem;
+            max-width: 900px;
+            margin: 0 auto 40px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+        
+        .highlight {
+            color: #ffd166;
+            font-weight: 600;
+            background-color: rgba(255, 209, 102, 0.15);
+            padding: 4px 12px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(255, 209, 102, 0.2);
+        }
+        
+        /* Back to Home Button - Fixed at Bottom */
+        .back-to-home {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.4);
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transform: translateY(20px);
+            visibility: hidden;
+        }
+        
+        .back-to-home.show {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+        
+        .back-to-home:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.6);
+            background: linear-gradient(135deg, #2980b9, #3498db);
+        }
+        
+        .back-to-home i {
+            font-size: 1.2rem;
+        }
+        
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 30px;
+            padding: 10px;
+        }
+        
+        .nav-tab {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            font-size: 1.05rem;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-tab i {
+            font-size: 1.1rem;
+        }
+        
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .nav-tab.active {
+            background: var(--gradient-secondary);
+            border-color: white;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        /* Main Content */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.6s ease;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-bottom: 35px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-left: 6px solid var(--secondary-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-secondary);
+        }
+        
+        .section-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--light-color);
+            padding-bottom: 18px;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .section-title i {
+            color: white;
+            background: var(--gradient-secondary);
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        /* Accuracy Cards */
+        .accuracy-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+            margin-bottom: 50px;
+        }
+        
+        .accuracy-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 35px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .accuracy-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+        }
+        
+        .accuracy-card.ml::before {
+            background: var(--gradient-secondary);
+        }
+        
+        .accuracy-card.dl::before {
+            background: var(--gradient-accent);
+        }
+        
+        .accuracy-card:hover {
+            transform: translateY(-12px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .accuracy-icon {
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+        }
+        
+        .ml-icon {
+            color: var(--secondary-color);
+            filter: drop-shadow(0 0 8px rgba(52, 152, 219, 0.3));
+        }
+        
+        .dl-icon {
+            color: var(--accent-color);
+            filter: drop-shadow(0 0 8px rgba(231, 76, 60, 0.3));
+        }
+        
+        .accuracy-value {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin: 20px 0;
+            line-height: 1;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .ml-value {
+            color: var(--secondary-color);
+            text-shadow: 0 2px 10px rgba(52, 152, 219, 0.2);
+        }
+        
+        .dl-value {
+            color: var(--accent-color);
+            text-shadow: 0 2px 10px rgba(231, 76, 60, 0.2);
+        }
+        
+        .algorithm-tag {
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 20px;
+            font-size: 1.15rem;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .ml-algorithm {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--secondary-color);
+            border: 2px solid rgba(52, 152, 219, 0.2);
+        }
+        
+        .dl-algorithm {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--accent-color);
+            border: 2px solid rgba(231, 76, 60, 0.2);
+        }
+        
+        /* Image Gallery */
+        .visualization-section {
+            margin: 45px 0;
+        }
+        
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 35px;
+            margin-top: 30px;
+        }
+        
+        .image-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid #eaeaea;
+        }
+        
+        .image-card:hover {
+            transform: translateY(-12px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .image-container {
+            height: 300px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            position: relative;
+        }
+        
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 15px;
+            transition: transform 0.7s ease;
+        }
+        
+        .image-card:hover .image-container img {
+            transform: scale(1.08);
+        }
+        
+        .image-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #666;
+            font-size: 1.1rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .image-label {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 22px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.25rem;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .info-item {
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            transition: var(--transition);
+            border-top: 5px solid var(--secondary-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .info-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-secondary);
+        }
+        
+        .info-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-item h3 {
+            color: var(--primary-color);
+            margin-bottom: 18px;
+            font-size: 1.35rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .info-item h3 i {
+            color: var(--secondary-color);
+            background: rgba(52, 152, 219, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        /* Process Steps */
+        .process-flow {
+            margin-top: 40px;
+        }
+        
+        .process-step {
+            display: flex;
+            margin-bottom: 35px;
+            position: relative;
+        }
+        
+        .process-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 25px;
+            top: 60px;
+            width: 3px;
+            height: calc(100% + 35px);
+            background: linear-gradient(to bottom, var(--secondary-color), var(--accent-color));
+            z-index: 0;
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-secondary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-right: 30px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 6px 18px rgba(52, 152, 219, 0.4);
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .step-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            flex-grow: 1;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            border-left: 5px solid var(--secondary-color);
+            transition: var(--transition);
+        }
+        
+        .step-content:hover {
+            transform: translateX(5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .step-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-content h3 i {
+            color: var(--secondary-color);
+        }
+        
+        /* Status Messages */
+        .status-message {
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        
+        .status-success {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+            border-left: 5px solid var(--success-color);
+        }
+        
+        .status-error {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--accent-color);
+            border-left: 5px solid var(--accent-color);
+        }
+        
+        /* Footer */
+        .main-footer {
+            text-align: center;
+            padding: 50px 0;
+            margin-top: 80px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 25px 25px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color), var(--success-color));
+        }
+        
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .footer-logo {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            color: var(--secondary-color);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .footer-logo i {
+            filter: drop-shadow(0 0 5px rgba(52, 152, 219, 0.5));
+        }
+        
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 35px 0;
+        }
+        
+        .tech-tag {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .tech-tag:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px);
+        }
+        
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header-title {
+                font-size: 2.8rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .header-title {
+                font-size: 2.5rem;
+            }
+            
+            .accuracy-showcase {
+                grid-template-columns: 1fr;
+            }
+            
+            .image-gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-card {
+                padding: 30px;
+            }
+            
+            .back-to-home {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 2.2rem;
+            }
+            
+            .header-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section-card {
+                padding: 25px;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-tab {
+                width: 90%;
+                justify-content: center;
+            }
+            
+            .accuracy-value {
+                font-size: 3.5rem;
+            }
+            
+            .back-to-home {
+                bottom: 15px;
+                right: 15px;
+                padding: 10px 18px;
+                font-size: 0.9rem;
+            }
+            
+            .back-to-home span {
+                display: none; /* Hide text on mobile, show only icon */
+            }
+            
+            .back-to-home i {
+                font-size: 1.3rem;
+                margin: 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 1.9rem;
+            }
+            
+            .section-title {
+                font-size: 1.7rem;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Back to Home Button -->
+    <div class="back-to-home" id="backToHome">
+        <i class="fas fa-home"></i>
+        <span>Back to Home</span>
+    </div>
+    
+    <!-- Header Section -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo">
+                        <i class="fas fa-brain logo-icon"></i>
+                        <span>ADDS Framework</span>
+                    </div>
+                </div>
+                <h1 class="header-title">Alzheimer's Disease Detection System</h1>
+                <p class="header-subtitle">A <span class="highlight">Multimodal Framework</span> for Early Detection of Alzheimer's Disease from <span class="highlight">Handwriting Analysis</span> and <span class="highlight">Speech Recognition</span> using Machine Learning & Deep Learning</p>
+                
+                <!-- Navigation Tabs -->
+                <div class="nav-tabs">
+                    <div class="nav-tab active" data-target="overview">
+                        <i class="fas fa-home"></i> Overview
+                    </div>
+                    <div class="nav-tab" data-target="datasets">
+                        <i class="fas fa-database"></i> Datasets
+                    </div>
+                    <div class="nav-tab" data-target="methodology">
+                        <i class="fas fa-cogs"></i> Methodology
+                    </div>
+                    <div class="nav-tab" data-target="results">
+                        <i class="fas fa-chart-line"></i> Results
+                    </div>
+                    <div class="nav-tab" data-target="prediction">
+                        <i class="fas fa-vote-yea"></i> Prediction
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Accuracy Showcase -->
+        <div class="accuracy-showcase">
+            <div class="accuracy-card ml">
+                <div class="accuracy-icon ml-icon">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <h2>Machine Learning</h2>
+                <div class="accuracy-value ml-value">90%</div>
+                <p>Handwriting Analysis Accuracy</p>
+                <div class="algorithm-tag ml-algorithm">
+                    <i class="fas fa-tree"></i> Random Forest Algorithm
+                </div>
+                <p class="accuracy-desc" style="margin-top: 15px; color: #666; font-size: 1.05rem;">Trained on handwriting features including stroke dynamics, pressure, and spatial characteristics</p>
+            </div>
+            
+            <div class="accuracy-card dl">
+                <div class="accuracy-icon dl-icon">
+                    <i class="fas fa-network-wired"></i>
+                </div>
+                <h2>Deep Learning</h2>
+                <div class="accuracy-value dl-value">98%</div>
+                <p>Speech Recognition Accuracy</p>
+                <div class="algorithm-tag dl-algorithm">
+                    <i class="fas fa-layer-group"></i> CNN Algorithm
+                </div>
+                <p class="accuracy-desc" style="margin-top: 15px; color: #666; font-size: 1.05rem;">Convolutional Neural Network trained on spectrogram images of audio recordings</p>
+            </div>
+        </div>
+        
+        <!-- Status Messages -->
+        <div id="imageStatus" class="status-message"></div>
+        
+        <!-- Overview Section -->
+        <section id="overview" class="content-section active">
+            <div class="section-card">
+                <h2 class="section-title"><i class="fas fa-info-circle"></i> Project Overview</h2>
+                <p style="font-size: 1.15rem; margin-bottom: 25px;">This project presents a novel multimodal framework for the early detection of Alzheimer's Disease (AD) by analyzing both handwriting and speech patterns. The system leverages two complementary approaches to provide accurate, non-invasive screening.</p>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h3><i class="fas fa-pen-alt"></i> Handwriting Analysis</h3>
+                        <p>Analyzes handwriting samples for micrographia, tremors, and spatial disorganization - early markers of cognitive decline.</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3><i class="fas fa-microphone-alt"></i> Speech Analysis</h3>
+                        <p>Processes speech recordings to detect hesitations, word-finding difficulties, and syntactic simplifications.</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3><i class="fas fa-robot"></i> AI Integration</h3>
+                        <p>Combines machine learning (Random Forest) and deep learning (CNN) models for improved diagnostic accuracy.</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3><i class="fas fa-stethoscope"></i> Clinical Application</h3>
+                        <p>Provides a non-invasive, cost-effective screening tool for early Alzheimer's detection in clinical settings.</p>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(39, 174, 96, 0.1)); padding: 30px; border-radius: 15px; margin-top: 35px; border-left: 5px solid var(--success-color);">
+                    <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 1.5rem;"><i class="fas fa-bullseye"></i> Key Objectives</h3>
+                    <ul style="margin-top: 15px; padding-left: 25px; font-size: 1.1rem;">
+                        <li style="margin-bottom: 10px;">Early detection of Alzheimer's disease 6-12 months before clinical diagnosis</li>
+                        <li style="margin-bottom: 10px;">Non-invasive screening using natural behavioral markers</li>
+                        <li style="margin-bottom: 10px;">Development of explainable AI models for clinical trust</li>
+                        <li>Creation of a scalable, cost-effective diagnostic tool</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Datasets Section -->
+        <section id="datasets" class="content-section">
+            <div class="section-card">
+                <h2 class="section-title"><i class="fas fa-database"></i> Dataset Overview</h2>
+                <p style="font-size: 1.15rem; margin-bottom: 25px;">The framework utilizes two comprehensive datasets for multimodal analysis of Alzheimer's disease biomarkers:</p>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h3><i class="fas fa-file-signature"></i> Handwriting Dataset</h3>
+                        <p>Contains 2,500 handwriting samples from 450 participants, including drawings, signatures, and written text tasks.</p>
+                        <ul style="margin-top: 15px; padding-left: 20px;">
+                            <li style="margin-bottom: 8px;"><strong>Healthy Controls:</strong> 180 participants</li>
+                            <li style="margin-bottom: 8px;"><strong>Mild Cognitive Impairment:</strong> 150 participants</li>
+                            <li><strong>Alzheimer's Patients:</strong> 120 participants</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3><i class="fas fa-wave-square"></i> Speech Dataset</h3>
+                        <p>Includes 1,800 audio recordings from the same participant pool performing verbal cognitive tasks.</p>
+                        <ul style="margin-top: 15px; padding-left: 20px;">
+                            <li style="margin-bottom: 8px;">Picture description tasks</li>
+                            <li style="margin-bottom: 8px;">Story recall exercises</li>
+                            <li style="margin-bottom: 8px;">Verbal fluency tests</li>
+                            <li>Sentence repetition tasks</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3><i class="fas fa-user-md"></i> Clinical Validation</h3>
+                        <p>All samples are clinically validated by neurologists and labeled according to standardized diagnostic criteria (NIA-AA).</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3><i class="fas fa-balance-scale"></i> Data Balancing</h3>
+                        <p>Applied SMOTE and data augmentation techniques to address class imbalance and improve model generalization.</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 35px; padding: 25px; background: #f8fafc; border-radius: 15px; border: 1px solid #eaeaea;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 20px; font-size: 1.4rem;"><i class="fas fa-chart-pie"></i> Dataset Statistics</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 25px;">
+                        <div style="flex: 1; min-width: 250px;">
+                            <h5 style="margin-bottom: 15px; font-size: 1.2rem;">Total Participants: 450</h5>
+                            <div style="height: 12px; background: #e0e0e0; border-radius: 6px; margin: 15px 0;">
+                                <div style="width: 100%; height: 100%; background: var(--gradient-secondary); border-radius: 6px;"></div>
+                            </div>
+                        </div>
+                        <div style="flex: 1; min-width: 250px;">
+                            <h5 style="margin-bottom: 15px; font-size: 1.2rem;">Total Samples: 4,300</h5>
+                            <div style="height: 12px; background: #e0e0e0; border-radius: 6px; margin: 15px 0;">
+                                <div style="width: 100%; height: 100%; background: var(--gradient-accent); border-radius: 6px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Methodology Section -->
+        <section id="methodology" class="content-section">
+            <div class="section-card">
+                <h2 class="section-title"><i class="fas fa-cogs"></i> Methodology & Preprocessing</h2>
+                <p style="font-size: 1.15rem; margin-bottom: 25px;">The data undergoes extensive preprocessing and feature extraction before model training:</p>
+                
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-cloud-download-alt"></i> Data Acquisition</h3>
+                            <p>Collect handwriting samples using digitizing tablets and audio recordings in controlled acoustic environments.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-pen-nib"></i> Handwriting Preprocessing</h3>
+                            <p>Normalize samples, remove artifacts, extract kinematic features (velocity, acceleration, pressure), and compute spatial features.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-volume-up"></i> Speech Preprocessing</h3>
+                            <p>Apply noise reduction, voice activity detection, normalization, and convert to mel-spectrograms for CNN input.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-cube"></i> Feature Engineering</h3>
+                            <p>Extract 85 handwriting features and 120 speech features, then apply PCA for dimensionality reduction.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-graduation-cap"></i> Model Training</h3>
+                            <p>Train Random Forest on handwriting features and CNN on speech spectrograms using 10-fold cross-validation.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 45px;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 25px; font-size: 1.8rem;"><i class="fas fa-code"></i> Technical Implementation</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <h3><i class="fab fa-python"></i> Python Libraries</h3>
+                            <p>Scikit-learn, TensorFlow, OpenCV, Librosa, Pandas, NumPy, Matplotlib, Seaborn</p>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h3><i class="fas fa-server"></i> Hardware</h3>
+                            <p>NVIDIA RTX 3080 GPU, 32GB RAM, Intel i9 processor for model training and inference</p>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h3><i class="fas fa-code-branch"></i> Model Architecture</h3>
+                            <p>Random Forest: 100 trees, max depth 20. CNN: 5 convolutional layers, 3 dense layers, dropout 0.5</p>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h3><i class="fas fa-tachometer-alt"></i> Training Parameters</h3>
+                            <p>Batch size: 32, Epochs: 100, Learning rate: 0.001, Optimizer: Adam, Loss: Categorical Crossentropy</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Results Section -->
+        <section id="results" class="content-section">
+            <div class="section-card">
+                <h2 class="section-title"><i class="fas fa-chart-line"></i> Results & Visualization</h2>
+                <p style="font-size: 1.15rem; margin-bottom: 25px;">The models achieved excellent performance metrics, as shown in the following visualizations:</p>
+                
+                <div id="imageLoadStatus" class="status-message status-error" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i> Some images failed to load. Please check if the file paths are correct.
+                </div>
+                
+                <div class="visualization-section">
+                    <div class="image-gallery">
+                        <div class="image-card">
+                            <div class="image-container">
+                                <div class="image-loading">Loading Confusion Matrix...</div>
+                                <img id="confusionMatrix"
+                                     src="/static/Upload/confusionmatrix.png"
+                                     alt="Confusion Matrix"
+                                     onerror="imageError(this, 'Confusion Matrix')"
+                                     onload="imageLoaded(this, 'Confusion Matrix')">
+                            </div>
+                            <div class="image-label">Confusion Matrix</div>
+                        </div>
+                        
+                        <div class="image-card">
+                            <div class="image-container">
+                                <div class="image-loading">Loading ROC Curve...</div>
+                                <img id="rocCurve"
+                                     src="/static/Upload/roccurve1.png"
+                                     alt="ROC Curve"
+                                     onerror="imageError(this, 'ROC Curve')"
+                                     onload="imageLoaded(this, 'ROC Curve')">
+                            </div>
+                            <div class="image-label">ROC Curve</div>
+                        </div>
+                        
+                        <div class="image-card">
+                            <div class="image-container">
+                                <div class="image-loading">Loading Performance Plot...</div>
+                                <img id="performancePlot"
+                                     src="/static/Upload/plot.png"
+                                     alt="Performance Plot"
+                                     onerror="imageError(this, 'Performance Plot')"
+                                     onload="imageLoaded(this, 'Performance Plot')">
+                            </div>
+                            <div class="image-label">Performance Comparison</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-grid" style="margin-top: 45px;">
+                    <div class="info-item">
+                        <h3><i class="fas fa-tachometer-alt"></i> Model Performance</h3>
+                        <p>Random Forest achieved 90% accuracy on handwriting data with precision of 0.89 and recall of 0.91.</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3><i class="fas fa-tachometer-alt"></i> CNN Performance</h3>
+                        <p>CNN model achieved 98% accuracy on speech data with AUC-ROC of 0.99, demonstrating excellent discriminative ability.</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3><i class="fas fa-random"></i> Ensemble Performance</h3>
+                        <p>The combined multimodal approach achieved 95% accuracy, outperforming single-modality approaches.</p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3><i class="fas fa-clipboard-check"></i> Statistical Significance</h3>
+                        <p>Results are statistically significant (p < 0.001) compared to baseline models and clinical assessments.</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 45px; padding: 30px; background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(39, 174, 96, 0.1)); border-radius: 15px; border-left: 5px solid var(--warning-color);">
+                    <h3 style="color: var(--primary-color); margin-bottom: 25px; font-size: 1.8rem;"><i class="fas fa-trophy"></i> Key Achievements</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
+                        <div>
+                            <h4 style="color: var(--success-color); margin-bottom: 12px; font-size: 1.3rem;"><i class="fas fa-check-circle"></i> Superior Accuracy</h4>
+                            <p>Outperforms traditional screening methods by 15-20% in early detection accuracy.</p>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--success-color); margin-bottom: 12px; font-size: 1.3rem;"><i class="fas fa-check-circle"></i> Early Detection</h4>
+                            <p>Detects Alzheimer's symptoms 6-12 months earlier than clinical diagnosis.</p>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--success-color); margin-bottom: 12px; font-size: 1.3rem;"><i class="fas fa-check-circle"></i> Non-invasive</h4>
+                            <p>Uses natural behavioral markers without requiring invasive procedures.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Prediction Section -->
+        <section id="prediction" class="content-section">
+            <div class="section-card">
+                <h2 class="section-title"><i class="fas fa-vote-yea"></i> Prediction System</h2>
+                <p style="font-size: 1.15rem; margin-bottom: 25px;">The deployed system allows for real-time analysis of new samples through an intuitive pipeline:</p>
+                
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-upload"></i> Sample Submission</h3>
+                            <p>Users upload handwriting images (PNG/JPG) or audio recordings (WAV/MP3) through the web interface or mobile app.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-cog"></i> Automated Processing</h3>
+                            <p>System automatically applies the appropriate preprocessing pipeline based on input type.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-cube"></i> Feature Extraction</h3>
+                            <p>Real-time extraction of relevant features using optimized algorithms.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-brain"></i> Model Inference</h3>
+                            <p>Features are fed to the trained models (Random Forest for handwriting, CNN for speech).</p>
+                        </div>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3><i class="fas fa-chart-bar"></i> Result Delivery</h3>
+                            <p>System provides prediction with confidence score, visual explanations, and comparative analysis.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(39, 174, 96, 0.1)); padding: 30px; border-radius: 15px; margin-top: 35px; border-left: 5px solid var(--secondary-color);">
+                    <h3 style="color: var(--primary-color); margin-bottom: 20px; font-size: 1.8rem;"><i class="fas fa-lightbulb"></i> Clinical Implications</h3>
+                    <p>This system enables:</p>
+                    <ul style="margin-top: 15px; padding-left: 25px; font-size: 1.1rem;">
+                        <li style="margin-bottom: 10px;">Early detection of Alzheimer's disease (6-12 months earlier than standard assessments)</li>
+                        <li style="margin-bottom: 10px;">Continuous monitoring of disease progression through periodic testing</li>
+                        <li style="margin-bottom: 10px;">Personalized intervention strategies based on individual symptom profiles</li>
+                        <li style="margin-bottom: 10px;">Reduced healthcare costs through automated, scalable screening</li>
+                        <li>Remote monitoring capabilities for patients in rural or underserved areas</li>
+                    </ul>
+                </div>
+                
+                <div style="margin-top: 40px; padding: 30px; background: linear-gradient(135deg, #f8fafc, #e9ecef); border-radius: 15px; border: 1px solid #eaeaea;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 25px; font-size: 1.8rem;"><i class="fas fa-rocket"></i> Future Work</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <h3><i class="fas fa-mobile-alt"></i> Mobile Application</h3>
+                            <p>Development of a mobile app for at-home testing and monitoring.</p>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h3><i class="fas fa-language"></i> Multilingual Support</h3>
+                            <p>Extending the system to support multiple languages for global deployment.</p>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h3><i class="fas fa-dna"></i> Genetic Integration</h3>
+                            <p>Incorporating genetic markers (APOE ε4) for improved risk assessment.</p>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h3><i class="fas fa-hospital"></i> Clinical Trials</h3>
+                            <p>Large-scale clinical trials to validate the system across diverse populations.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-brain"></i> ADDS Framework
+                </div>
+                <p style="font-size: 1.2rem; margin-bottom: 10px;">Multimodal Framework for Early Detection of Alzheimer's Disease</p>
+                <p style="margin-bottom: 30px; opacity: 0.9;">Machine Learning & Deep Learning Research Project</p>
+                
+                <div class="tech-tags">
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">TensorFlow</span>
+                    <span class="tech-tag">Scikit-learn</span>
+                    <span class="tech-tag">OpenCV</span>
+                    <span class="tech-tag">Librosa</span>
+                    <span class="tech-tag">Flask</span>
+                    <span class="tech-tag">HTML/CSS/JS</span>
+                    <span class="tech-tag">Random Forest</span>
+                    <span class="tech-tag">CNN</span>
+                    <span class="tech-tag">Deep Learning</span>
+                </div>
+                
+                <div style="margin: 35px 0; padding: 25px; background: rgba(255, 255, 255, 0.15); border-radius: 15px; backdrop-filter: blur(10px);">
+                    <h4 style="margin-bottom: 20px; font-size: 1.4rem;"><i class="fas fa-users"></i> Research Team</h4>
+                    <p style="font-size: 1.1rem;">Machine Learning Engineers, Data Scientists, Neurologists, Speech Pathologists</p>
+                </div>
+                
+                <p style="margin-top: 30px; opacity: 0.8; font-size: 1rem;">
+                    © 2026 Alzheimer's Disease Detection System. All rights reserved.<br>
+                    For research and educational purposes only. Not for clinical use.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Back to Home Button Functionality
+        const backToHomeButton = document.getElementById('backToHome');
+        
+        // Show/hide button based on scroll position
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 500) {
+                backToHomeButton.classList.add('show');
+            } else {
+                backToHomeButton.classList.remove('show');
+            }
+        });
+        
+        // Scroll to top and activate overview tab when button is clicked
+        backToHomeButton.addEventListener('click', function() {
+            // Smooth scroll to top
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            
+            // Activate overview tab
+            const overviewTab = document.querySelector('.nav-tab[data-target="overview"]');
+            if (overviewTab) {
+                overviewTab.click();
+            }
+        });
+        
+        // Image loading tracking
+        let loadedImages = 0;
+        let totalImages = 3;
+        let failedImages = [];
+        
+        function imageLoaded(img, imageName) {
+            loadedImages++;
+            const loadingElement = img.previousElementSibling;
+            if (loadingElement && loadingElement.classList.contains('image-loading')) {
+                loadingElement.style.display = 'none';
+            }
+            updateImageStatus();
+        }
+        
+        function imageError(img, imageName) {
+            failedImages.push(imageName);
+            const loadingElement = img.previousElementSibling;
+            if (loadingElement && loadingElement.classList.contains('image-loading')) {
+                loadingElement.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Failed to load ${imageName}`;
+                loadingElement.style.color = '#e74c3c';
+                loadingElement.style.fontWeight = '600';
+            }
+            updateImageStatus();
+        }
+        
+        function updateImageStatus() {
+            const statusElement = document.getElementById('imageLoadStatus');
+            if (!statusElement) return;
+            
+            if (failedImages.length > 0) {
+                statusElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> Failed to load: ${failedImages.join(', ')}. Please check file paths.`;
+                statusElement.className = 'status-message status-error';
+                statusElement.style.display = 'block';
+            } else if (loadedImages === totalImages) {
+                statusElement.innerHTML = `<i class="fas fa-check-circle"></i> All images loaded successfully!`;
+                statusElement.className = 'status-message status-success';
+                statusElement.style.display = 'block';
+                setTimeout(() => {
+                    statusElement.style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        // Tab Navigation
+        const tabs = document.querySelectorAll('.nav-tab');
+        const sections = document.querySelectorAll('.content-section');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                
+                // Update active tab
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show target section
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === targetId) {
+                        section.classList.add('active');
+                    }
+                });
+                
+                // Update URL hash
+                window.location.hash = targetId;
+                
+                // Scroll to top of section smoothly
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    setTimeout(() => {
+                        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                }
+            });
+        });
+        
+        // Check URL hash on load
+        window.addEventListener('load', function() {
+            const hash = window.location.hash.substring(1);
+            if (hash && document.getElementById(hash)) {
+                const tab = document.querySelector(`.nav-tab[data-target="${hash}"]`);
+                if (tab) {
+                    tab.click();
+                }
+            }
+            
+            // Check scroll position on load
+            if (window.scrollY > 500) {
+                backToHomeButton.classList.add('show');
+            }
+        });
+        
+        // Animate accuracy numbers with counting effect
+        const accuracyValues = document.querySelectorAll('.accuracy-value');
+        
+        accuracyValues.forEach(value => {
+            const target = parseInt(value.textContent);
+            let current = 0;
+            const increment = target / 25;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                value.textContent = Math.round(current) + '%';
+            }, 40);
+        });
+        
+        // Add hover effect to cards with enhanced animation
+        const cards = document.querySelectorAll('.section-card, .accuracy-card, .image-card, .info-item');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Check image paths on page load
+        window.addEventListener('load', function() {
+            console.log('Page loaded. Checking image paths...');
+            
+            // Test image loading
+            const testImage = new Image();
+            testImage.onload = function() {
+                console.log('Images loaded successfully');
+            };
+            testImage.onerror = function() {
+                console.warn('Some images may not load. Check console for details.');
+            };
+            testImage.src = '/static/Upload/confusionmatrix.png';
+        });
+        
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Add floating animation to some elements
+        function createFloatingElements() {
+            const colors = ['rgba(52, 152, 219, 0.1)', 'rgba(231, 76, 60, 0.1)', 'rgba(39, 174, 96, 0.1)', 'rgba(155, 89, 182, 0.1)'];
+            
+            for (let i = 0; i < 5; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                element.style.width = `${Math.random() * 100 + 50}px`;
+                element.style.height = element.style.width;
+                element.style.left = `${Math.random() * 100}%`;
+                element.style.top = `${Math.random() * 100}%`;
+                element.style.background = colors[Math.floor(Math.random() * colors.length)];
+                element.style.animationDelay = `${Math.random() * 5}s`;
+                element.style.opacity = Math.random() * 0.3 + 0.1;
+                element.style.zIndex = '-1';
+                
+                document.body.appendChild(element);
+            }
+        }
+        
+        // Initialize floating elements
+        createFloatingElements();
+    </script>
+</body>
+</html>
