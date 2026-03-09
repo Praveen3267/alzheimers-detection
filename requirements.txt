@@ -1,0 +1,10 @@
+Flask
+gunicorn
+numpy
+pandas
+scikit-learn
+tensorflow
+librosa
+joblib
+matplotlib
+soundfile
