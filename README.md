@@ -2,6 +2,10 @@
 
 A multimodal machine learning application for Alzheimer's disease analysis using handwriting-derived features and speech/audio signals.
 
+## Application Preview
+
+![Alzheimer's Disease Detection Application](alzheimers-app.png)
+
 ## Overview
 
 This project explores complementary machine learning and deep learning approaches for Alzheimer's disease detection using two input modalities:
