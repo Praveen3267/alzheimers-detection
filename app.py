@@ -3,6 +3,7 @@ import pandas as pd
 import joblib
 import re
 import os
+from dotenv import load_dotenv
 import sqlite3
 import numpy as np
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -15,8 +16,10 @@ import traceback
 # ======================
 # Flask App Setup
 # ======================
+load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = 'your_very_secret_key_change_in_production'
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 # Enable debug to see detailed errors
 DEBUG_MODE = True
@@ -75,13 +78,28 @@ def load_models():
     # Try to load audio model
     try:
         print("\nLoading audio model...")
-        # Check if TensorFlow is available
+               # Load audio model architecture and existing trained weights
         try:
-            from tensorflow.keras.models import load_model
-            model_audio = load_model("alzheimers_speech_model.h5")
-            print("✅ Keras audio model loaded")
-        except:
-            print("⚠️  Keras model not found or failed to load")
+            from tensorflow.keras import Sequential
+            from tensorflow.keras.layers import Input, Dense, Dropout
+
+            model_audio = Sequential([
+                Input(shape=(40,)),
+                Dense(128, activation='relu'),
+                Dropout(0.4),
+                Dense(64, activation='relu'),
+                Dropout(0.3),
+                Dense(1, activation='sigmoid')
+            ])
+
+            model_audio.load_weights("alzheimers_speech_model.h5")
+
+            print("✅ Keras audio model architecture created")
+            print("✅ Existing trained audio weights loaded")
+
+        except Exception as e:
+            print(f"❌ Audio model failed to load: {e}")
+            print(traceback.format_exc())
             model_audio = None
         
         # Try to load scaler
@@ -331,19 +349,17 @@ def predict_audio_route():
         mfcc_features = extract_mfcc(filepath, n_mfcc=40)
         print(f"MFCC features shape: {mfcc_features.shape}")
         
-        # Make prediction
-        if model_audio is not None and scaler_audio is not None:
-            # Reshape and scale
-            mfcc_reshaped = mfcc_features.reshape(1, -1)
-            mfcc_scaled = scaler_audio.transform(mfcc_reshaped)
-            
-            # Predict
-            prob_p = float(model_audio.predict(mfcc_scaled, verbose=0)[0][0])
-            print(f"Model prediction: prob_p = {prob_p}")
-        else:
-            # Fallback: random prediction for testing
-            print("⚠️  Using fallback prediction (models not loaded)")
-            prob_p = 0.3 if "AD" in filename.upper() else 0.7
+                # Make prediction using the trained audio model
+        if model_audio is None or scaler_audio is None:
+            raise RuntimeError("Audio model or scaler is not loaded.")
+
+        # Reshape and scale
+        mfcc_reshaped = mfcc_features.reshape(1, -1)
+        mfcc_scaled = scaler_audio.transform(mfcc_reshaped)
+
+        # Predict
+        prob_p = float(model_audio.predict(mfcc_scaled, verbose=0)[0][0])
+        print(f"Model prediction: prob_p = {prob_p}"29
         
         # Determine result
         pred_label = 'P' if prob_p >= 0.5 else 'H'
